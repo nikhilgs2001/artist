@@ -1,0 +1,201 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body{
+    background-color: #f2f2f2;
+  }
+	img{
+		height: auto;
+		width: 100%;
+		
+	}
+  .head1{
+      background-color: #c33c3c;
+      padding-top: 25px;
+      padding-bottom: 25px;
+      color: white;
+      font-size: 50px;
+      font-family: Brush Script MT;
+      text-align: center;
+    }
+   .foo{
+      font-family: Georgia;
+      color: #808080;
+      font-size: 10px;
+      margin-top: 140px;
+      margin-left: 20px;
+    }
+.text{
+  border-color: #d57676;
+  color: #ff4d67;
+  outline: none;
+  background-color: transparent;
+  font-size: 15px;
+
+}
+
+.text{
+  margin-left: 50px;
+}
+#select,#upload{
+color: white;
+background-color: #cc001f;
+font-size: 20px;
+border: none;
+border-radius: 15px;
+padding-top: 10px;
+padding-bottom: 10px;
+padding-left: 10px;
+padding-right: 10px;
+margin-top: 20px;
+outline: none;
+}
+
+.po{
+  text-align: center;
+  
+}
+#UpProgress{
+  color: #ff1a3c;
+  font-family: Copperplate;
+  margin-left: 30px;
+}
+.ib1{
+  text-decoration: none;
+  color: white;
+background-color: #cc001f;
+font-size: 20px;
+border: none;
+border-radius: 15px;
+padding-top: 10px;
+padding-bottom: 10px;
+padding-left: 10px;
+padding-right: 10px;
+margin-top: 10px;
+outline: none;
+}
+
+</style>
+
+</head>
+<body>
+  <div class="head1">
+    Really Artistic
+  </div><br><br>
+  <div class="ib">
+    <a href="profile.html" src="try.png" class="ib1">Upload Profile</a><br><br><br>
+  </div>
+<span style="font-size: 20px;color: #cd5c5c;font-weight: bold;margin-left: 20px;">Comment:</span><input type="text" id="name" class="text"><br><br>
+<span style="font-size: 20px;color: #cd5c5c;font-weight: bold;margin-left: 10px;">
+User Name:</span><input type="text" id="name1" class="text"><br><br>
+<span style="font-size: 20px;color: #cd5c5c;font-weight: bold;margin-left: 16px;">
+Password :</span><input type="password" id="name2" class="text"><br><br>
+<img id="myimg"><label id="UpProgress"></label><br><br>
+<div class="po">
+<input type="button" id="select" value="Select Image">
+<input type="button" id="upload" value="upload Image">
+</div>
+
+<!-- FIREBASE LIBRARIES-->
+
+<script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-database.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-storage.js"></script> 
+
+<script id="MainScript">
+	var ImgName,ImgUrl;
+	var files = [];
+	var reader;
+var a;
+	var firebaseConfig = {
+   apiKey: "AIzaSyDWGWUwLc0om5IKfcqZ1w4cnoF94_99DGI",
+    authDomain: "artist1-c9eeb.firebaseapp.com",
+    databaseURL: "https://artist1-c9eeb-default-rtdb.firebaseio.com",
+    projectId: "artist1-c9eeb",
+    storageBucket: "artist1-c9eeb.appspot.com",
+    messagingSenderId: "108418643497",
+    appId: "1:108418643497:web:e6ea8a65617f9b2294ce38",
+    measurementId: "G-KRJG5SVGNG"
+  };
+  
+  firebase.initializeApp(firebaseConfig);
+
+  document.getElementById("select").onclick = function(e){
+  	var input = document.createElement('input');
+  	input.type='file';
+  	
+
+  	input.onchange = e => {
+  		files = e.target.files;
+  		reader = new FileReader();
+  		reader.onload = function(){
+  			document.getElementById("myimg").src = reader.result;
+  		}
+  		reader.readAsDataURL(files[0]);
+
+  	}
+  	input.click();
+  }
+
+//------Upload progress
+document.getElementById("upload").onclick=function(){
+	//ImgName = document.getElementById("namebox").value;
+ alert("Please wait your Image is being uploaded");
+firebase.database().ref('Pictures/'+"nikhil"+'/com').on('value',(snap)=>{
+    ImgName=snap.val();
+  });
+
+
+
+
+	name=document.getElementById("name").value;
+  name1=document.getElementById("name1").value;
+  name2=document.getElementById("name2").value;
+	var uploadTask = firebase.storage().ref('Images/'+ImgName+".jpeg").put(files[0]);
+    uploadTask.on('state_changed',function(snapshot){
+    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    document.getElementById('UpProgress').innerHTML = 'Upload'+progress+'%';
+
+
+    },
+
+    function(error){
+    	alert("error");
+    },
+    function(){
+    	uploadTask.snapshot.ref.getDownloadURL().then(function(url){
+            ImgUrl = url;
+    	
+        firebase.database().ref('Pictures/'+ImgName).set({
+            Name: name1,
+            Comment:name,
+            Link: ImgUrl,
+            Password:name2,
+            like: "0",
+            Imagek:"https://firebasestorage.googleapis.com/v0/b/meme1-82167.appspot.com/o/try.png?alt=media&token=ab5d3d15-7038-436c-8a53-5961c829c44f"
+        });
+alert('Image uploaded Successfully your Image Id is '+ImgName);
+    }
+         );
+    	});
+    
+    firebase.database().ref('Pictures/'+'nikhil').set({
+        com:firebase.database.ServerValue.increment(1)
+    });
+
+}
+
+
+
+</script>
+
+
+<div class="foo">
+<span style="font-size: 20px;">Note:</span><br><br>
+1.Please make note of the ID for your Reference<br>
+2.Upload Your profile using upload profile button.
+</div>
+</body>	
+</html>
