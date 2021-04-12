@@ -153,7 +153,7 @@ firebase.database().ref('Pictures/'+"nikhil"+'/com').on('value',(snap)=>{
 	name=document.getElementById("name").value;
   name1=document.getElementById("name1").value;
   name2=document.getElementById("name2").value;
-	var uploadTask = firebase.storage().ref('Images/'+ImgName+".jpeg").put(files[0]);
+	var uploadTask = firebase.storage().ref('Images'+ImgName+".jpeg").put(files[0]);
     uploadTask.on('state_changed',function(snapshot){
     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
     document.getElementById('UpProgress').innerHTML = 'Upload'+progress+'%';
