@@ -105,7 +105,8 @@ Password :</span><input type="password" id="name2" class="text"><br><br>
 <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-storage.js"></script> 
 
 <script id="MainScript">
-	var ImgName,ImgUrl;
+	var ImgName=0;
+	var ImgUrl;
 	var files = [];
 	var reader;
 var a;
@@ -143,13 +144,23 @@ var a;
 document.getElementById("upload").onclick=function(){
 	//ImgName = document.getElementById("namebox").value;
  alert("Please wait your Image is being uploaded");
+	timeoutI = setInterval(hiiii,1000);
+function hiiii(){
 firebase.database().ref('Pictures/'+"nikhil"+'/com').on('value',(snap)=>{
     ImgName=snap.val();
   });
 
 
 
+ if(ImgName>=0){
+clearInterval(timeoutI);
+lp();
 
+ }   
+ 
+}
+}
+function lp(){
 	name=document.getElementById("name").value;
   name1=document.getElementById("name1").value;
   name2=document.getElementById("name2").value;
