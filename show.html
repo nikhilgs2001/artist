@@ -96,7 +96,7 @@ timeoutID = setInterval(hiii,500);
 
 op=j;
 po=k;
-if(op!=0){
+if(op!=1){
 
 firebase.database().ref('Pictures/'+op+'/Comment').on('value',function(snapshot){
 document.getElementById(po+"x").innerHTML=snapshot.val();
@@ -123,7 +123,7 @@ firebase.database().ref('Pictures/'+op).on('value',function(snapshot){
     document.getElementById('demo').appendChild(objNewDiv);
 
     
-if(op==1){
+if(op==2){
      clearInterval(timeoutID);
 }
 
